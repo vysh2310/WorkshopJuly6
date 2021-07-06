@@ -47,8 +47,15 @@ void main(void)
  *  Verifying Data from external source
  *==========================================================================*/
 static int tainted_int_source(void) {
-	return strtol(getenv("INDEX"),NULL,10);
+    int k=0;errno =0;
+    k = strtol(getenv("INDEX"),NULL,10);
+     
+     if((k == LONG_MIN || k == LONG_MAX) && errno == ERANGE) {
+         printf("strtol error");
+         exit(EXIT_FAILURE);}
+	return k;
 }
+
 int taintedarrayindex(void) {
 	int num = tainted_int_source();
 	if (num >= 0 && num < SIZE100) {
